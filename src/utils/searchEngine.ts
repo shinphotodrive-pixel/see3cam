@@ -33,6 +33,7 @@ const SYNONYM_GROUPS: string[][] = [
   ['신뢰성', '인증', '온도', '진동', '습도', '보관', '전자파', 'reliability', 'emc', 'ce', 'fcc', 'esd', 'halt', 'hass', 'iec 60068'],
   ['불량', '오류', '문제', '안나옴', '검은화면', '하얀화면', '깜빡임', '빨간불', '노란불', 'led', '트러블슈팅', '고장'],
   ['sdk', 'api', 'c++', '함수', '코드', '예제', 'extension unit', 'hid'],
+  ['번호인식', '번호판', '차량', '과속', '레이더', '베스트셔터링', '연속촬영', '버스트', '야간조명', 'anpr', 'lpr', 'radar', '80m', '10m', '3.5m'],
 ];
 
 function buildSearchIndex(): SearchResultEntry[] {
@@ -295,6 +296,49 @@ function buildSearchIndex(): SearchResultEntry[] {
     });
   });
 
+  // 11. 차량 과속 검지 및 번호 인식 (ANPR) 응용 매뉴얼 인덱싱
+  entries.push(
+    {
+      id: 'anpr-radar-80m-10m-procedure',
+      title: '[번호인식] 차량 과속 검지(3.5m 레이더·80m) 및 10m 베스트 셔터링 9단계 절차',
+      subtitle: '레이더 3.5m(2.5° 하향, 80m 검지) · See3CAM_24CUG 3.5m(19.3° 하향, 10m 센터) 연속 촬영',
+      category: 'spec',
+      categoryLabel: '번호인식(ANPR)',
+      body: '1. 레이더 높이 3.5m 설치 → 2. 전방 80m 검지 하향 조준(약 2.5°) → 3. 80m부터 과속 여부 판단 → 4. See3CAM_24CUG 높이 3.5m 설치(CHL_TC/CH_TC 보드형 권장) → 5. 지면 조준선 센터 약 10m 설정(약 19.3°) → 6. 과속 차량 센터 진입 시 다연발 베스트 셔터링 → 7. 야간 Pin 5 Strobe 동기 조명 제어 → 8. 선명도·노출 기반 베스트 사진 선별 → 9. 번호판 문자 인식(ANPR).',
+      keywords: ['번호인식', '번호판', '과속', '레이더', '80m', '10m', '3.5m', '베스트 셔터링', '연속촬영', 'ANPR', 'LPR'],
+      targetTab: 'anpr',
+      targetSection: 'anpr-procedure',
+      pdfId: 'datasheet',
+      pdfPage: 7,
+    },
+    {
+      id: 'anpr-night-strobe-circuit',
+      title: '[번호인식] 야간 번호판 촬영용 CN6 Pin 5 (STROBE) 조명 동기화 및 Pin 4 (TRIG) 회로 설계',
+      subtitle: '오픈 드레인 4.7kΩ 풀업 · 별도 12V/24V 조명 드라이버 절연 · 다연발 하드웨어 트리거',
+      category: 'pinout',
+      categoryLabel: '번호인식(ANPR)',
+      body: '야간 과속 차량 촬영 시 See3CAM_24CUG CN6 헤더의 Pin 5(STROBE, Open Drain)에 4.7kΩ 외부 풀업 저항과 게이트 드라이버를 연결해 글로벌 셔터 노광 구간(200~500µs)에만 고출력 LED/IR 조명을 동기 발광시킵니다.',
+      keywords: ['야간', '조명', 'Strobe', '스트로브', 'Pin 5', 'Pin 4', '4.7k', '번호인식', '과속', 'IR'],
+      targetTab: 'anpr',
+      targetSection: 'anpr-strobe-circuit',
+      pdfId: 'datasheet',
+      pdfPage: 8,
+    },
+    {
+      id: 'anpr-sdk-api-implementation',
+      title: '[번호인식] 과속 차량 베스트 셔터링 · 야간 Strobe · 베스트 프레임 선별 C/C++ SDK 구현',
+      subtitle: 'InitExtensionUnit → SetStrobeMode24CUG(0x01) → SetStreamMode24CUG(0x01, 0x01) → Laplacian 선별',
+      category: 'sdk',
+      categoryLabel: '번호인식(ANPR)',
+      body: 'See3CAM_24CUG Extension Unit SDK API를 활용해 주/야간 고속 노광(SetExposureCompensation24CUG, SetExpRoiMode24CUG), 야간 Strobe 활성화(SetStrobeMode24CUG), 외부 트리거 다연발 또는 120fps 마스터 버스트(SetStreamMode24CUG) 제어 및 최적 번호판 사진 선별 C++ 예제 코드를 제공합니다.',
+      keywords: ['번호인식', 'SDK', 'API', 'C++', 'SetStrobeMode24CUG', 'SetStreamMode24CUG', '베스트 셔터링', 'Best Shot', 'Laplacian'],
+      targetTab: 'anpr',
+      targetSection: 'anpr-sdk-guide',
+      pdfId: 'sdk-api',
+      pdfPage: 22,
+    }
+  );
+
   return entries;
 }
 
@@ -420,6 +464,7 @@ export function getHighlightSegments(text: string, query: string): HighlightSegm
 }
 
 export const POPULAR_SEARCH_QUERIES = [
+  { label: '차량 과속·번호인식 (ANPR)', query: '차량 과속 번호인식' },
   { label: '6핀 GPIO 핀맵 (TRIG / STROBE)', query: 'GPIO 핀맵' },
   { label: '해상도별 소비전력 · 120fps', query: '120fps 소비전력' },
   { label: '외부 트리거 모드 설정', query: '트리거 모드' },
@@ -427,5 +472,4 @@ export const POPULAR_SEARCH_QUERIES = [
   { label: '노출 시간 매핑 (-14 ~ 0)', query: '노출 매핑' },
   { label: 'LED 점멸 상태별 진단', query: 'LED 트러블슈팅' },
   { label: 'DFU 펌웨어 복구 (PID_DF01)', query: 'DFU 펌웨어 복구' },
-  { label: '얼굴 인식 164B 패킷 (0xFFBC)', query: '0xFFBC' },
 ];

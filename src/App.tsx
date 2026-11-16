@@ -5,15 +5,17 @@ import { OverviewSection } from './components/OverviewSection';
 import { HardwareSection } from './components/HardwareSection';
 import { SoftwareSection } from './components/SoftwareSection';
 import { SdkSection } from './components/SdkSection';
+import { AnprSection } from './components/AnprSection';
 import { PdfLibrarySection } from './components/PdfLibrarySection';
 import { SearchModal } from './components/SearchModal';
 import { PdfViewerDrawer } from './components/PdfViewerDrawer';
 
 const NAV_ITEMS: { id: MainTabId; label: string; desc: string }[] = [
-  { id: 'overview', label: '통합 검색·개요', desc: '검색 허브 · 핵심 사양 · 전력 · 트러블슈팅' },
+  { id: 'overview', label: '개요·검색', desc: '통합 검색 · 핵심 사양 · 전력 · 트러블슈팅' },
   { id: 'hardware', label: '하드웨어·핀맵', desc: '6핀 GPIO · USB-C · 광학 · 기구 · 신뢰성' },
-  { id: 'software', label: '소프트웨어·펌웨어', desc: 'e-CAMView · QtCAM · 노출 매핑 · DFU 복구' },
+  { id: 'software', label: '소프트웨어', desc: 'e-CAMView · QtCAM · 노출 매핑 · DFU 복구' },
   { id: 'sdk', label: 'SDK API (31)', desc: 'C/C++ Extension Unit 전체 함수 레퍼런스' },
+  { id: 'anpr', label: '번호인식', desc: '3.5m 레이더(80m) 과속 검지 · 10m 베스트 셔터링 · 야간 Strobe & SDK 제어' },
   { id: 'pdfs', label: '원본 PDF (14)', desc: '공식 데이터시트·매뉴얼·성적서 원문 뷰어' },
 ];
 
@@ -242,6 +244,16 @@ export default function App() {
             selectedApiId={selectedApiId}
             onSelectApiId={setSelectedApiId}
             onOpenPdf={handleOpenPdf}
+          />
+        )}
+        {activeTab === 'anpr' && (
+          <AnprSection
+            onOpenPdf={handleOpenPdf}
+            onJumpToSdkApi={(apiId) => {
+              setSelectedApiId(apiId);
+              setActiveTab('sdk');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           />
         )}
         {activeTab === 'pdfs' && (

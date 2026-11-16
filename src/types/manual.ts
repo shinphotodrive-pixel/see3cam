@@ -1,4 +1,4 @@
-export type MainTabId = 'overview' | 'hardware' | 'software' | 'sdk' | 'pdfs';
+export type MainTabId = 'overview' | 'hardware' | 'software' | 'sdk' | 'anpr' | 'pdfs';
 
 export type SearchCategory =
   | 'all'
